@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hive/contact_page.dart';
+import 'package:flutter_hive/models/contact.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 
@@ -7,6 +8,7 @@ void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   final appDocumentDirectory = await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDocumentDirectory.path);
+  Hive.registerAdapter(ContactAdapter());
   runApp(MyApp());
 }
 
@@ -45,7 +47,9 @@ class _MyAppState extends State<MyApp> {
   @override
   void dispose() {
     // TODO: implement dispose
-    Hive.box("contacts").close();
+    Hive.box("contacts").compact();
+
+    Hive.close();
     super.dispose();
   }
 }
